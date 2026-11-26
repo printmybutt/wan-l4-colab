@@ -54,6 +54,14 @@ os.environ['HF_XET_CACHE'] = '/content/wan_l4_lab/hf_cache/xet'
 
 已完成文件会复用；HTTP/Xet 切换后未完成的大文件可能重新下载。依赖和接口导入已检查，未在 Colab 测速，不保证提速倍数。参见 [Hugging Face 官方 Xet 说明](https://huggingface.co/docs/hub/en/xet/using-xet-storage)。
 
+## Cloudflare 自检失败恢复
+
+如果日志已经出现 `Registered tunnel connection` 且网络预检通过，旧版可能在公网地址尚未就绪时过早关闭隧道。新版先验证本地应用，再分别尝试 auto / HTTP/2，每种协议最多等待 120 秒，显示具体 HTTP 状态和连接错误；仍严格要求匿名 401 / 带密码健康 JSON 200。
+
+已有 Colab 不用重装模型：把 [Cloudflare_Recovery.py](Cloudflare_Recovery.py) 的内容复制到新代码单元格，设置 `ENABLE_PUBLIC=True` 后运行。它复用当前 `BASE` 和 `WEB_AUTH`，只重建此笔记本的隧道，不重启模型服务。失败日志为 `tunnel_auto.log` / `tunnel_http2.log`。
+
+修复经过离线模拟测试；真实公网连通性需在你的 Colab 中验证。
+
 ## 默认访问设置
 
 `ENABLE_WEB=False`、`ENABLE_PUBLIC=False`。开启网页时需要隐藏输入至少 16 字符密码；密码不会写入配置。

@@ -56,3 +56,12 @@ os.environ['HF_XET_CACHE'] = '/content/wan_l4_lab/hf_cache/xet'
 然后重新运行原笔记本第 4 节，不必重新安装完整环境。不要使用主内核的 !pip 来替代上述命令。
 Xet 客户端与固定 Hub 版本的可用性及旧版接口导入已在本地验证；未在 Colab 测速，不保证提速倍数。
 官方资料：https://huggingface.co/docs/hub/en/xet/using-xet-storage
+
+Cloudflare 自检修复（2026-11-26）
+原先仅等待短时间并将 HTTP/连接错误统一隐藏，可能在隧道已注册后过早关闭它。
+新版先检查本地匿名 401/带密码健康 200，再按 auto、http2 两种协议各等待最多 120 秒。
+显示 HTTP 状态或网络异常，区别鉴权失败与网络就绪问题；仅验证成功才公布公网地址。
+Cloudflare_Recovery.py 是可粘贴到已有笔记本新代码单元格的修复代码，复用 BASE、WEB_AUTH；执行前设 ENABLE_PUBLIC=True。
+不用重新下载模型或重新启动生成服务。失败时查看 tunnel_auto.log、tunnel_http2.log，分享日志前去除凭据。
+用户提供日志显示原隧道已成功注册并通过网络预检，随后被原自检清理；具体公网请求错误仍需新版诊断。
+该修复经过离线模拟测试，未在用户 Colab 或真实公网隧道上验证。
