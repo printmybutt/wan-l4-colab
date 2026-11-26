@@ -1,0 +1,45 @@
+Wan L4 想法到视频 — 运行说明
+核对日期：2026-11-26
+
+适用配置
+NVIDIA L4 24GB 显存、64GB 系统内存、200GB 硬盘。
+官方 24GB 显存说明基于卸载配置；不是本笔记本在 L4 上实测通过的声明。
+安装前要求至少 40 GiB 可用内存、100 GiB 可用磁盘，显存空闲至少 21000 MiB。
+
+如何开始
+1. 下载 Wan_L4_Idea_to_Video.ipynb。
+2. 打开 https://colab.research.google.com/ ，选择「文件 → 上传笔记本」。
+3. 「运行时 → 更改运行时类型」选择 L4 GPU 和高内存；不需要向作者提供账号或接入你的 Colab。
+4. 依次运行第 1–4 节：硬件检查、安装、CUDA/CLI 自检、模型下载。
+5. 在第 1 节修改 IDEA。先保留 33 帧、20 步；运行第 5–7 节，逐步检查文案、原图、视频首帧和视频。
+6. 第 8 节下载产物 ZIP，包含日志和实际环境记录，不包含权重或密码。
+7. 短片跑通后，可在新运行中使用 121 帧、50 步。官方 24 FPS 下约 5.04 秒。
+
+模型与实现
+文案：Qwen/Qwen2.5-1.5B-Instruct，BF16。
+图片：stabilityai/sd-turbo，FP16，512×512，4 步，CFG=0；保存原图并展示居中裁切、放大的 1280×704 首帧。
+视频：Wan-AI/Wan2.2-TI2V-5B 官方权重及官方 generate.py，1280×704。
+保留 --offload_model True、--convert_model_dtype、--t5_cpu。
+三个阶段依次在独立进程执行，退出释放 CUDA 上下文；文件锁防止与网页抢占 GPU。
+独立 Python 3.11 环境，固定源码提交、模型提交、顶层依赖和官方预编译 FlashAttention wheel。
+下载需数十 GB；安装和下载时需要访问 GitHub、PyPI、PyTorch、Hugging Face。
+后续推理强制离线，不使用付费 API。完整来源链接在笔记本末尾。
+
+可选网页/API
+默认 ENABLE_WEB=False、ENABLE_PUBLIC=False。
+第 9 节开启本地 FastAPI，隐藏输入至少 16 字符密码；不写入配置。
+第 10 节显式开启 Cloudflare Quick Tunnel，校验客户端 SHA256，并自检匿名 401、带密码 200 后展示 HTTPS 链接。
+网页、API、图片和视频均要求 HTTP Basic 鉴权；不自动挂载 Drive、不自动公开文件夹。
+页面用轮询显示阶段状态，避开 Quick Tunnel 不支持 SSE 的限制。
+POST /jobs 提交，GET /jobs/{id} 查询，GET /files/{id}/video.mp4 下载。
+服务一次只接一个任务；同一账号能看该服务会话内的所有产物，仅适合个人临时演示。
+第 11 节将 STOP_SERVICES=True 后运行，可关闭网页、隧道和匹配的模型进程。
+
+检查与边界
+随附验证报告列明静态检查及 CPU 模拟 API 检查。
+作者未在 NVIDIA L4 或 Google Colab 实际执行；未安装完整 GPU 环境、未加载大模型、未生成真实视频。
+L4 的峰值 RAM/VRAM、真实耗时、最终画质以及公网连通性均未实测。
+笔记本中的 GPU 小算子与输出自检需要由你的运行时执行，不能视为已经通过。
+遇到失败请保留对应日志，先修复，不要跳过检查继续执行。
+文案不是配音或字幕；图片是轻量试跑方案，放大不会增加细节。
+Colab 回收会删除 /content 文件，请及时下载结果。许可请参照各模型卡，SD-Turbo 商业使用需核对当前 Stability AI 许可。
