@@ -1,5 +1,24 @@
 # Wan L4 Colab 创作工作流
 
+## 推荐：一键版
+
+[![一键版 · Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/printmybutt/wan-l4-colab/blob/main/%E4%B8%80%E9%94%AE%E7%89%88.ipynb)
+
+**打开「一键版.ipynb」，选择 L4 GPU 和高内存运行时，点击「全部运行」。** 自动完成安装、模型下载、网页和公网隧道启动，最后显示 **HTTPS 地址、账号 owner、自动生成的强密码**。无需修改开关或输入密码。
+
+公网默认开启且强制鉴权，通过本地与公网自检后才显示访问凭据。启动时不自动生成视频；登录网页后提交想法，依次查看文案、首帧和视频。同一运行时重复执行会复用仍正常的服务与密码。
+
+- [一键版笔记本](一键版.ipynb)
+- [一键版说明](一键版说明.txt)
+- [一键版验证报告](一键版验证报告.json)
+- [一键版下载包](一键版下载包.zip)
+- [一键版 SHA256 校验](一键版SHA256SUMS.txt)
+
+密码只保留在运行时内存和最终输出，请在分享笔记本前清除运行输出。公网临时地址随 Colab/隧道停止而失效。新文件本身不含真实凭据。**未在 L4/Colab 实际执行，真实公网连通性仍需运行验证。**
+
+## 普通版：按阶段运行
+
+
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/printmybutt/wan-l4-colab/blob/main/Wan_L4_Idea_to_Video.ipynb)
 
 想法 → 中文文案与英文提示词 → 图片 → 官方 Wan2.2 TI2V-5B 图生视频，每一步展示和保存结果。
