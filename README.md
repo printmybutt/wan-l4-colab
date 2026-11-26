@@ -36,6 +36,24 @@
 - 包含 RAM / VRAM / 磁盘 / 驱动检查、GPU 小算子检查及 ffprobe 输出检查；这些运行时检查仍需由你的 Colab 执行。
 - 不依赖 ComfyUI、自定义节点或付费推理 API。
 
+## 下载速度与 Xet 提示
+
+已补充 `hf-xet==1.8.0`；当前固定 `huggingface-hub==0.30.2` 需要显式安装 Xet 客户端。第 4 节会在独立环境安装并启用它，使用 4 个文件下载线程，并跳过 SD-Turbo 用不到的重复 FP32/单文件权重。
+
+正在使用旧版笔记本时：停止下载，在新单元格执行以下代码，再重跑第 4 节；不用重装整套环境或删除缓存。
+
+```python
+import os, subprocess
+subprocess.run([
+    '/content/wan_l4_lab/venv/bin/python', '-m', 'pip',
+    'install', 'hf-xet==1.8.0'
+], check=True)
+os.environ.pop('HF_HUB_DISABLE_XET', None)
+os.environ['HF_XET_CACHE'] = '/content/wan_l4_lab/hf_cache/xet'
+```
+
+已完成文件会复用；HTTP/Xet 切换后未完成的大文件可能重新下载。依赖和接口导入已检查，未在 Colab 测速，不保证提速倍数。参见 [Hugging Face 官方 Xet 说明](https://huggingface.co/docs/hub/en/xet/using-xet-storage)。
+
 ## 默认访问设置
 
 `ENABLE_WEB=False`、`ENABLE_PUBLIC=False`。开启网页时需要隐藏输入至少 16 字符密码；密码不会写入配置。

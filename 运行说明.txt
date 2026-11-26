@@ -43,3 +43,16 @@ L4 的峰值 RAM/VRAM、真实耗时、最终画质以及公网连通性均未�
 遇到失败请保留对应日志，先修复，不要跳过检查继续执行。
 文案不是配音或字幕；图片是轻量试跑方案，放大不会增加细节。
 Colab 回收会删除 /content 文件，请及时下载结果。许可请参照各模型卡，SD-Turbo 商业使用需核对当前 Stability AI 许可。
+
+下载修复（2026-11-26）
+已补充 hf-xet==1.8.0，与 huggingface-hub==0.30.2 配合使用，避免缺少 Xet 客户端时退回 HTTP。
+第 4 节会确保加速包安装在 /content/wan_l4_lab/venv 环境，使用 4 个文件下载线程。
+SD-Turbo 跳过未使用的重复 FP32 和单文件权重；已完成缓存会复用。切换 HTTP/Xet 后未完成大文件可能重新下载。
+下载失败请不要删除 hf_cache 或重启运行时。停止当前下载，在新的代码单元格运行：
+import os, subprocess
+subprocess.run(['/content/wan_l4_lab/venv/bin/python', '-m', 'pip', 'install', 'hf-xet==1.8.0'], check=True)
+os.environ.pop('HF_HUB_DISABLE_XET', None)
+os.environ['HF_XET_CACHE'] = '/content/wan_l4_lab/hf_cache/xet'
+然后重新运行原笔记本第 4 节，不必重新安装完整环境。不要使用主内核的 !pip 来替代上述命令。
+Xet 客户端与固定 Hub 版本的可用性及旧版接口导入已在本地验证；未在 Colab 测速，不保证提速倍数。
+官方资料：https://huggingface.co/docs/hub/en/xet/using-xet-storage

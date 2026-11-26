@@ -27,5 +27,17 @@
     "固定模型版本与下载文件长度",
     "ffprobe 输出尺寸/帧率/帧数",
     "本地及公网匿名 401 / 鉴权 200"
-  ]
+  ],
+  "download_fix": {
+    "hf_xet": "1.8.0",
+    "huggingface_hub": "0.30.2",
+    "local_checks": [
+      "macOS Python 3.11 可用性检查及旧版 PyPointerFile/download_files 接口导入通过",
+      "SD-Turbo 权重筛选保留 FP16 与配置并排除重复权重"
+    ],
+    "not_performed": [
+      "未在 Colab 下载模型或测量传输速度",
+      "未验证真实 Xet 数据传输"
+    ]
+  }
 }
